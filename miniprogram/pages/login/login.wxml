@@ -1,0 +1,30 @@
+<view class="login-wrap">
+  <view class="logo-area">
+    <view class="logo">📷</view>
+    <view class="title">记者团器材管理</view>
+    <view class="subtitle">请填写你的姓名进行登录</view>
+  </view>
+
+  <view class="form card">
+    <view class="form-item">
+      <view class="label">姓名</view>
+      <input
+        class="input"
+        type="text"
+        placeholder="请输入你的真实姓名"
+        placeholder-class="placeholder"
+        value="{{name}}"
+        bindinput="onNameInput"
+      />
+    </view>
+  </view>
+
+  <button
+    class="btn-primary submit-btn"
+    loading="{{loading}}"
+    disabled="{{loading}}"
+    bindtap="submit"
+  >登 录</button>
+
+  <view class="tips">登录后将记录你的借用信息，请如实填写姓名</view>
+</view>

@@ -1,0 +1,158 @@
+.header {
+  background: #2b2b2b;
+  padding: 30rpx 32rpx;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: #fff;
+  color: #2b2b2b;
+  font-size: 40rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  color: #fff;
+  font-size: 34rpx;
+  font-weight: bold;
+}
+
+.user-role {
+  color: #bbb;
+  font-size: 24rpx;
+  margin-top: 6rpx;
+}
+
+.admin-btn {
+  color: #fff;
+  font-size: 26rpx;
+  padding: 12rpx 24rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.5);
+  border-radius: 30rpx;
+}
+
+.tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 26rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  position: relative;
+}
+
+.tab.active {
+  color: #2b2b2b;
+  font-weight: bold;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48rpx;
+  height: 6rpx;
+  border-radius: 3rpx;
+  background: #2b2b2b;
+}
+
+.empty {
+  text-align: center;
+  padding: 120rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.equip-card {
+  display: flex;
+  padding: 20rpx;
+}
+
+.equip-img {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+  background: #f0f0f0;
+}
+
+.equip-img-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60rpx;
+  color: #ccc;
+}
+
+.equip-body {
+  flex: 1;
+  margin-left: 24rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.equip-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.equip-meta {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+}
+
+.status-tag {
+  font-size: 24rpx;
+  padding: 6rpx 18rpx;
+  border-radius: 8rpx;
+}
+
+.status-tag.available {
+  background: #e8f7ee;
+  color: #2e9e5b;
+}
+
+.status-tag.borrowed {
+  background: #fdecec;
+  color: #e05353;
+}
+
+.borrower {
+  margin-left: 16rpx;
+  font-size: 24rpx;
+  color: #2e6bd6;
+}

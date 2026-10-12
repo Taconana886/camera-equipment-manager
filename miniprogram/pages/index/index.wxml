@@ -1,0 +1,52 @@
+<view class="header">
+  <view class="user-row">
+    <view class="avatar">{{userInfo.name ? userInfo.name[0] : '?'}}</view>
+    <view class="user-info">
+      <view class="user-name">{{userInfo.name}}</view>
+      <view class="user-role">{{isAdmin ? '管理员' : '普通成员'}}</view>
+    </view>
+    <view wx:if="{{isAdmin}}" class="admin-btn" bindtap="goAdmin">⚙ 管理</view>
+  </view>
+</view>
+
+<view class="tabs">
+  <view class="tab {{tab === 'all' ? 'active' : ''}}" data-tab="all" bindtap="switchTab">全部 ({{total}})</view>
+  <view class="tab {{tab === 'available' ? 'active' : ''}}" data-tab="available" bindtap="switchTab">在器材室 ({{availableCount}})</view>
+  <view class="tab {{tab === 'borrowed' ? 'active' : ''}}" data-tab="borrowed" bindtap="switchTab">已借出 ({{borrowedCount}})</view>
+</view>
+
+<view class="container">
+  <view wx:if="{{loading}}" class="empty">加载中...</view>
+  <view wx:elif="{{filteredList.length === 0}}" class="empty">
+    <view class="empty-icon">📦</view>
+    <view>暂无器材</view>
+  </view>
+  <block wx:else>
+    <view
+      wx:for="{{filteredList}}"
+      wx:key="_id"
+      class="card equip-card"
+      data-id="{{item._id}}"
+      bindtap="goDetail"
+    >
+      <image
+        wx:if="{{item.imageFileID}}"
+        class="equip-img"
+        src="{{item.imageFileID}}"
+        mode="aspectFill"
+      />
+      <view wx:else class="equip-img equip-img-empty">📷</view>
+
+      <view class="equip-body">
+        <view class="equip-name">{{item.name}}</view>
+        <view class="equip-meta">{{item.brand}}{{item.brand && item.code ? ' · ' : ''}}{{item.code}}</view>
+        <view class="status-row">
+          <view class="status-tag {{item.status === 'available' ? 'available' : 'borrowed'}}">
+            {{item.status === 'available' ? '在器材室' : '已借出'}}
+          </view>
+          <view wx:if="{{item.status === 'borrowed'}}" class="borrower">借用人：{{item.currentBorrower}}</view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

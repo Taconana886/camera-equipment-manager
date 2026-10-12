@@ -1,0 +1,56 @@
+<view wx:if="{{loading}}" class="empty">加载中...</view>
+
+<view wx:elif="{{item}}" class="detail">
+  <image
+    wx:if="{{item.imageFileID}}"
+    class="detail-img"
+    src="{{item.imageFileID}}"
+    mode="aspectFill"
+    bindtap="previewImage"
+  />
+  <view wx:else class="detail-img detail-img-empty">📷</view>
+
+  <view class="card info-card">
+    <view class="name">{{item.name}}</view>
+    <view class="status-tag {{item.status === 'available' ? 'available' : 'borrowed'}}">
+      {{item.status === 'available' ? '在器材室' : '已借出'}}
+    </view>
+
+    <view class="info-row" wx:if="{{item.code}}">
+      <view class="info-label">编号</view>
+      <view class="info-value">{{item.code}}</view>
+    </view>
+    <view class="info-row" wx:if="{{item.brand}}">
+      <view class="info-label">品牌型号</view>
+      <view class="info-value">{{item.brand}}</view>
+    </view>
+    <view class="info-row" wx:if="{{item.remark}}">
+      <view class="info-label">备注</view>
+      <view class="info-value">{{item.remark}}</view>
+    </view>
+
+    <view wx:if="{{item.status === 'borrowed'}}" class="borrow-info">
+      <view class="borrow-title">当前借用信息</view>
+      <view class="borrow-line">借用人：{{item.currentBorrower}}</view>
+      <view class="borrow-line">借用时间：{{item.borrowTimeText}}</view>
+    </view>
+  </view>
+
+  <view class="actions">
+    <button
+      wx:if="{{item.status === 'available'}}"
+      class="btn-primary action-btn"
+      loading="{{operating}}"
+      disabled="{{operating}}"
+      bindtap="onBorrow"
+    >借 用</button>
+
+    <button
+      wx:if="{{item.status === 'borrowed' && (isBorrower || isAdmin)}}"
+      class="btn-return action-btn"
+      loading="{{operating}}"
+      disabled="{{operating}}"
+      bindtap="onReturn"
+    >归 还</button>
+  </view>
+</view>

@@ -1,0 +1,113 @@
+<view class="tabs">
+  <view class="tab {{tab === 'equipment' ? 'active' : ''}}" data-tab="equipment" bindtap="switchTab">器材管理</view>
+  <view class="tab {{tab === 'users' ? 'active' : ''}}" data-tab="users" bindtap="switchTab">用户管理</view>
+  <view class="tab {{tab === 'records' ? 'active' : ''}}" data-tab="records" bindtap="switchTab">借用记录</view>
+</view>
+
+<!-- 器材管理 -->
+<view wx:if="{{tab === 'equipment'}}" class="container">
+  <view class="list-head">
+    <text>共 {{equipmentList.length}} 件器材</text>
+    <view class="add-btn" bindtap="openAdd">＋ 添加器材</view>
+  </view>
+
+  <view wx:if="{{equipmentList.length === 0}}" class="empty">暂无器材，点击右上角添加</view>
+
+  <view wx:for="{{equipmentList}}" wx:key="_id" class="card admin-card">
+    <view class="admin-card-main">
+      <view class="admin-card-name">{{item.name}}</view>
+      <view class="admin-card-meta">
+        <text wx:if="{{item.code}}">编号：{{item.code}}</text>
+        <text wx:if="{{item.brand}}">  {{item.brand}}</text>
+      </view>
+      <view class="status-tag {{item.status === 'available' ? 'available' : 'borrowed'}}">
+        {{item.status === 'available' ? '在器材室' : '已借出'}}
+      </view>
+    </view>
+    <view class="admin-card-ops">
+      <view class="op op-edit" data-item="{{item}}" bindtap="openEdit">编辑</view>
+      <view class="op op-delete" data-item="{{item}}" bindtap="deleteEquipment">删除</view>
+    </view>
+  </view>
+</view>
+
+<!-- 用户管理 -->
+<view wx:if="{{tab === 'users'}}" class="container">
+  <view class="list-head">
+    <text>共 {{userList.length}} 位用户</text>
+  </view>
+
+  <view wx:if="{{userList.length === 0}}" class="empty">暂无用户</view>
+
+  <view wx:for="{{userList}}" wx:key="_id" class="card user-card">
+    <view class="user-card-main">
+      <view class="user-name">{{item.name}}</view>
+      <view class="user-role">{{item.isAdmin ? '管理员' : '普通成员'}}</view>
+    </view>
+    <view class="user-op" data-item="{{item}}" bindtap="toggleAdmin">
+      {{item.isAdmin ? '取消管理员' : '设为管理员'}}
+    </view>
+  </view>
+</view>
+
+<!-- 借用记录 -->
+<view wx:if="{{tab === 'records'}}" class="container">
+  <view class="list-head">
+    <text>共 {{recordList.length}} 条记录</text>
+  </view>
+
+  <view wx:if="{{recordList.length === 0}}" class="empty">暂无借用记录</view>
+
+  <view wx:for="{{recordList}}" wx:key="_id" class="card record-card">
+    <view class="record-top">
+      <view class="record-name">{{item.equipmentName}}</view>
+      <view class="record-status {{item.status === 'borrowed' ? 'borrowed' : 'returned'}}">
+        {{item.status === 'borrowed' ? '借出中' : '已归还'}}
+      </view>
+    </view>
+    <view class="record-line">借用人：{{item.borrowerName}}</view>
+    <view class="record-line">借用时间：{{item.borrowTimeText}}</view>
+    <view class="record-line" wx:if="{{item.status === 'returned'}}">归还时间：{{item.returnTimeText}}</view>
+  </view>
+</view>
+
+<!-- 添加/编辑器材表单 -->
+<view wx:if="{{showForm}}" class="mask" bindtap="closeForm">
+  <view class="form-panel" catchtap="noop">
+    <view class="form-title">{{formMode === 'add' ? '添加器材' : '编辑器材'}}</view>
+
+    <view class="field">
+      <view class="label">器材名称 <text class="req">*</text></view>
+      <input class="input" value="{{form.name}}" data-field="name" bindinput="onInput" placeholder="如：佳能 5D Mark IV" />
+    </view>
+
+    <view class="field">
+      <view class="label">编号</view>
+      <input class="input" value="{{form.code}}" data-field="code" bindinput="onInput" placeholder="如：CAM-001" />
+    </view>
+
+    <view class="field">
+      <view class="label">品牌型号</view>
+      <input class="input" value="{{form.brand}}" data-field="brand" bindinput="onInput" placeholder="如：佳能 / EOS 5D4" />
+    </view>
+
+    <view class="field">
+      <view class="label">图片</view>
+      <view class="img-upload">
+        <image wx:if="{{form.imageFileID}}" class="preview" src="{{form.imageFileID}}" mode="aspectFill" bindtap="chooseImage" />
+        <view wx:else class="img-add" bindtap="chooseImage">＋</view>
+        <view wx:if="{{form.imageFileID}}" class="img-remove" bindtap="removeImage">移除</view>
+      </view>
+    </view>
+
+    <view class="field">
+      <view class="label">备注</view>
+      <textarea class="textarea" value="{{form.remark}}" data-field="remark" bindinput="onInput" placeholder="备注信息（可选）" auto-height />
+    </view>
+
+    <view class="form-btns">
+      <button class="btn-cancel" bindtap="closeForm">取消</button>
+      <button class="btn-primary" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submitForm">保存</button>
+    </view>
+  </view>
+</view>

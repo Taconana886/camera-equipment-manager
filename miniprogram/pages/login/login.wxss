@@ -1,0 +1,60 @@
+.login-wrap {
+  padding: 80rpx 40rpx;
+}
+
+.logo-area {
+  text-align: center;
+  margin-bottom: 80rpx;
+}
+
+.logo {
+  font-size: 120rpx;
+  line-height: 1;
+  margin-bottom: 30rpx;
+}
+
+.title {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #2b2b2b;
+}
+
+.subtitle {
+  margin-top: 16rpx;
+  font-size: 28rpx;
+  color: #999;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  width: 120rpx;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.input {
+  flex: 1;
+  height: 80rpx;
+  font-size: 30rpx;
+}
+
+.placeholder {
+  color: #bbb;
+}
+
+.submit-btn {
+  margin-top: 40rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+}
+
+.tips {
+  margin-top: 30rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #bbb;
+}
