@@ -33,13 +33,15 @@ exports.main = async (event, context) => {
         }
 
         const now = db.serverDate()
+        const reason = (event.reason || '').trim()
         // 更新器材状态为已借出
         await equipmentCol.doc(id).update({
           data: {
             status: 'borrowed',
             currentBorrower: user.name,
             currentBorrowerOpenid: OPENID,
-            borrowTime: now
+            borrowTime: now,
+            currentReason: reason
           }
         })
 
@@ -53,6 +55,7 @@ exports.main = async (event, context) => {
             borrowerName: user.name,
             borrowerOpenid: OPENID,
             borrowTime: now,
+            reason,
             returnTime: null,
             status: 'borrowed'
           }
@@ -89,7 +92,8 @@ exports.main = async (event, context) => {
             status: 'available',
             currentBorrower: '',
             currentBorrowerOpenid: '',
-            borrowTime: null
+            borrowTime: null,
+            currentReason: ''
           }
         })
 
@@ -101,7 +105,11 @@ exports.main = async (event, context) => {
 
         if (recRes.data.length > 0) {
           await recordsCol.doc(recRes.data[0]._id).update({
-            data: { status: 'returned', returnTime: now }
+            data: {
+              status: 'returned',
+              returnTime: now,
+              returnImageFileID: event.returnImageFileID || ''
+            }
           })
         }
 

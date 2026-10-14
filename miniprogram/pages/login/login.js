@@ -8,17 +8,27 @@ Page({
   },
 
   onLoad() {
-    // 已登录则直接进入首页
+    // 已登录则直接返回上一页
     const userInfo = wx.getStorageSync('userInfo')
     if (userInfo && userInfo.openid) {
       app.globalData.userInfo = userInfo
       app.globalData.openid = userInfo.openid
-      wx.reLaunch({ url: '/pages/index/index' })
+      this.goBack()
       return
     }
 
     // 尝试静默登录，判断是否已注册
     this.checkLogin()
+  },
+
+  // 返回上一页，若没有上一页则回到首页
+  goBack() {
+    const pages = getCurrentPages()
+    if (pages.length > 1) {
+      wx.navigateBack()
+    } else {
+      wx.reLaunch({ url: '/pages/index/index' })
+    }
   },
 
   // 静默检查是否已注册
@@ -75,11 +85,12 @@ Page({
       openid: userInfo._openid,
       _id: userInfo._id,
       name: userInfo.name,
+      avatarFileID: userInfo.avatarFileID || '',
       isAdmin: userInfo.isAdmin === true
     }
     wx.setStorageSync('userInfo', data)
     app.globalData.userInfo = data
     app.globalData.openid = data.openid
-    wx.reLaunch({ url: '/pages/index/index' })
+    this.goBack()
   }
 })

@@ -45,6 +45,7 @@ exports.main = async (event, context) => {
           data: {
             _openid: OPENID,
             name,
+            category: event.category || '机身',
             code: (event.code || '').trim(),
             brand: (event.brand || '').trim(),
             imageFileID: event.imageFileID || '',
@@ -67,6 +68,7 @@ exports.main = async (event, context) => {
 
         const updateData = {}
         if (event.name !== undefined) updateData.name = (event.name || '').trim()
+        if (event.category !== undefined) updateData.category = event.category
         if (event.code !== undefined) updateData.code = (event.code || '').trim()
         if (event.brand !== undefined) updateData.brand = (event.brand || '').trim()
         if (event.imageFileID !== undefined) updateData.imageFileID = event.imageFileID

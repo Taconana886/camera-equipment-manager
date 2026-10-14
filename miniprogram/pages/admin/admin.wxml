@@ -44,8 +44,11 @@
       <view class="user-name">{{item.name}}</view>
       <view class="user-role">{{item.isAdmin ? '管理员' : '普通成员'}}</view>
     </view>
-    <view class="user-op" data-item="{{item}}" bindtap="toggleAdmin">
-      {{item.isAdmin ? '取消管理员' : '设为管理员'}}
+    <view class="user-ops">
+      <view class="user-op" data-item="{{item}}" bindtap="toggleAdmin">
+        {{item.isAdmin ? '取消管理员' : '设为管理员'}}
+      </view>
+      <view class="user-op user-op-delete" data-item="{{item}}" bindtap="deleteUser">移除</view>
     </view>
   </view>
 </view>
@@ -66,8 +69,17 @@
       </view>
     </view>
     <view class="record-line">借用人：{{item.borrowerName}}</view>
+    <view class="record-line" wx:if="{{item.reason}}">申请原因：{{item.reason}}</view>
     <view class="record-line">借用时间：{{item.borrowTimeText}}</view>
     <view class="record-line" wx:if="{{item.status === 'returned'}}">归还时间：{{item.returnTimeText}}</view>
+    <image
+      wx:if="{{item.status === 'returned' && item.returnImageFileID}}"
+      class="record-img"
+      src="{{item.returnImageFileID}}"
+      mode="aspectFill"
+      data-url="{{item.returnImageFileID}}"
+      bindtap="previewReturnImage"
+    />
   </view>
 </view>
 
@@ -79,6 +91,13 @@
     <view class="field">
       <view class="label">器材名称 <text class="req">*</text></view>
       <input class="input" value="{{form.name}}" data-field="name" bindinput="onInput" placeholder="如：佳能 5D Mark IV" />
+    </view>
+
+    <view class="field">
+      <view class="label">分类</view>
+      <picker mode="selector" range="{{categories}}" value="{{categoryIndex}}" bindchange="onCategoryChange">
+        <view class="picker">{{form.category}}</view>
+      </picker>
     </view>
 
     <view class="field">

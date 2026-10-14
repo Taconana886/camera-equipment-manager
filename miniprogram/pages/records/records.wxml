@@ -1,0 +1,35 @@
+<view class="container">
+  <view class="list-head">
+    <text>{{isAdmin ? '全部借用记录' : '我的借用记录'}}（{{recordList.length}}）</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty">加载中...</view>
+
+  <view wx:elif="{{recordList.length === 0}}" class="empty">
+    <view class="empty-icon">📋</view>
+    <view>暂无借用记录</view>
+  </view>
+
+  <block wx:else>
+    <view wx:for="{{recordList}}" wx:key="_id" class="card record-card">
+      <view class="record-top">
+        <view class="record-name">{{item.equipmentName}}</view>
+        <view class="record-status {{item.status === 'borrowed' ? 'borrowed' : 'returned'}}">
+          {{item.status === 'borrowed' ? '借出中' : '已归还'}}
+        </view>
+      </view>
+      <view class="record-line">借用人：{{item.borrowerName}}</view>
+      <view class="record-line" wx:if="{{item.reason}}">申请原因：{{item.reason}}</view>
+      <view class="record-line">借用时间：{{item.borrowTimeText}}</view>
+      <view class="record-line" wx:if="{{item.status === 'returned'}}">归还时间：{{item.returnTimeText}}</view>
+      <image
+        wx:if="{{item.status === 'returned' && item.returnImageFileID}}"
+        class="record-img"
+        src="{{item.returnImageFileID}}"
+        mode="aspectFill"
+        data-url="{{item.returnImageFileID}}"
+        bindtap="previewImage"
+      />
+    </view>
+  </block>
+</view>

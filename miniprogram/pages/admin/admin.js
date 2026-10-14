@@ -1,5 +1,5 @@
 const app = getApp()
-const { formatTime } = require('../../utils/util')
+const { formatTime, CATEGORIES } = require('../../utils/util')
 
 Page({
   data: {
@@ -11,9 +11,12 @@ Page({
     loading: false,
     showForm: false,
     formMode: 'add', // add / edit
+    categories: CATEGORIES,
+    categoryIndex: 0,
     form: {
       id: '',
       name: '',
+      category: '机身',
       code: '',
       brand: '',
       remark: '',
@@ -62,6 +65,11 @@ Page({
     }
   },
 
+  previewReturnImage(e) {
+    const url = e.currentTarget.dataset.url
+    if (url) wx.previewImage({ urls: [url] })
+  },
+
   async loadEquipment() {
     try {
       const res = await wx.cloud.callFunction({ name: 'equipment', data: { action: 'list' } })
@@ -87,24 +95,34 @@ Page({
     this.setData({
       showForm: true,
       formMode: 'add',
-      form: { id: '', name: '', code: '', brand: '', remark: '', imageFileID: '' }
+      categoryIndex: 0,
+      form: { id: '', name: '', category: '机身', code: '', brand: '', remark: '', imageFileID: '' }
     })
   },
 
   openEdit(e) {
     const item = e.currentTarget.dataset.item
+    const category = item.category || '机身'
+    const categoryIndex = Math.max(0, this.data.categories.indexOf(category))
     this.setData({
       showForm: true,
       formMode: 'edit',
+      categoryIndex,
       form: {
         id: item._id,
         name: item.name,
+        category,
         code: item.code || '',
         brand: item.brand || '',
         remark: item.remark || '',
         imageFileID: item.imageFileID || ''
       }
     })
+  },
+
+  onCategoryChange(e) {
+    const index = Number(e.detail.value)
+    this.setData({ categoryIndex: index, 'form.category': this.data.categories[index] })
   },
 
   closeForm() {
@@ -163,6 +181,7 @@ Page({
           data: {
             action: 'add',
             name: form.name,
+            category: form.category,
             code: form.code,
             brand: form.brand,
             remark: form.remark,
@@ -176,6 +195,7 @@ Page({
             action: 'update',
             id: form.id,
             name: form.name,
+            category: form.category,
             code: form.code,
             brand: form.brand,
             remark: form.remark,
@@ -245,6 +265,33 @@ Page({
             this.loadUsers()
           } else {
             wx.showToast({ title: result.message || '操作失败', icon: 'none' })
+          }
+        } catch (e) {
+          wx.showToast({ title: '网络异常', icon: 'none' })
+        }
+      }
+    })
+  },
+
+  deleteUser(e) {
+    const item = e.currentTarget.dataset.item
+    wx.showModal({
+      title: '移除用户',
+      content: `确定移除「${item.name}」吗？移除后该用户将无法再借用器材。`,
+      confirmColor: '#e05353',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          const call = await wx.cloud.callFunction({
+            name: 'admin',
+            data: { action: 'deleteUser', userId: item._id }
+          })
+          const result = call.result || {}
+          if (result.code === 0) {
+            wx.showToast({ title: result.message, icon: 'success' })
+            this.loadUsers()
+          } else {
+            wx.showToast({ title: result.message || '移除失败', icon: 'none' })
           }
         } catch (e) {
           wx.showToast({ title: '网络异常', icon: 'none' })

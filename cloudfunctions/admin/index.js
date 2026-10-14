@@ -39,6 +39,20 @@ exports.main = async (event, context) => {
         return { code: 0, message: target ? '已设为管理员' : '已取消管理员' }
       }
 
+      case 'deleteUser': {
+        const { userId } = event
+        if (!userId) return { code: 1, message: '缺少用户 ID' }
+
+        // 不能删除自己
+        const selfRes = await users.where({ _openid: OPENID }).get()
+        if (selfRes.data.length > 0 && selfRes.data[0]._id === userId) {
+          return { code: 1, message: '不能移除自己' }
+        }
+
+        await users.doc(userId).remove()
+        return { code: 0, message: '已移除该用户' }
+      }
+
       default:
         return { code: 1, message: '未知操作' }
     }

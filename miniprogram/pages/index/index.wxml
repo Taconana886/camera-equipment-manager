@@ -1,11 +1,21 @@
 <view class="header">
-  <view class="user-row">
-    <view class="avatar">{{userInfo.name ? userInfo.name[0] : '?'}}</view>
+  <view wx:if="{{userInfo}}" class="user-row" bindtap="openProfile">
+    <image wx:if="{{userInfo.avatarFileID}}" class="avatar avatar-img" src="{{userInfo.avatarFileID}}" mode="aspectFill" />
+    <view wx:else class="avatar">{{userInfo.name ? userInfo.name[0] : '?'}}</view>
     <view class="user-info">
       <view class="user-name">{{userInfo.name}}</view>
-      <view class="user-role">{{isAdmin ? '管理员' : '普通成员'}}</view>
+      <view class="user-role">{{isAdmin ? '管理员' : '普通成员'}} · 点击编辑资料</view>
     </view>
-    <view wx:if="{{isAdmin}}" class="admin-btn" bindtap="goAdmin">⚙ 管理</view>
+    <view class="header-btn" catchtap="goRecords">📋 记录</view>
+    <view wx:if="{{isAdmin}}" class="admin-btn" catchtap="goAdmin">⚙ 管理</view>
+  </view>
+  <view wx:else class="user-row" bindtap="goLogin">
+    <view class="avatar avatar-guest">访</view>
+    <view class="user-info">
+      <view class="user-name">未登录</view>
+      <view class="user-role">浏览器材无需登录，借用时需登录</view>
+    </view>
+    <view class="header-btn login-btn">登 录</view>
   </view>
 </view>
 
@@ -14,6 +24,17 @@
   <view class="tab {{tab === 'available' ? 'active' : ''}}" data-tab="available" bindtap="switchTab">在器材室 ({{availableCount}})</view>
   <view class="tab {{tab === 'borrowed' ? 'active' : ''}}" data-tab="borrowed" bindtap="switchTab">已借出 ({{borrowedCount}})</view>
 </view>
+
+<scroll-view class="cat-bar" scroll-x enhanced show-scrollbar="{{false}}">
+  <view class="cat-item {{selectedCategory === '全部' ? 'active' : ''}}" data-category="全部" bindtap="switchCategory">全部</view>
+  <view
+    wx:for="{{categories}}"
+    wx:key="*this"
+    class="cat-item {{selectedCategory === item ? 'active' : ''}}"
+    data-category="{{item}}"
+    bindtap="switchCategory"
+  >{{item}}</view>
+</scroll-view>
 
 <view class="container">
   <view wx:if="{{loading}}" class="empty">加载中...</view>
@@ -38,7 +59,10 @@
       <view wx:else class="equip-img equip-img-empty">📷</view>
 
       <view class="equip-body">
-        <view class="equip-name">{{item.name}}</view>
+        <view class="equip-name-row">
+          <view class="equip-name">{{item.name}}</view>
+          <view class="cat-tag">{{item.category || '机身'}}</view>
+        </view>
         <view class="equip-meta">{{item.brand}}{{item.brand && item.code ? ' · ' : ''}}{{item.code}}</view>
         <view class="status-row">
           <view class="status-tag {{item.status === 'available' ? 'available' : 'borrowed'}}">
@@ -49,4 +73,27 @@
       </view>
     </view>
   </block>
+</view>
+
+<!-- 编辑资料弹窗 -->
+<view wx:if="{{showProfile}}" class="mask" bindtap="closeProfile">
+  <view class="profile-panel" catchtap="noop">
+    <view class="form-title">编辑资料</view>
+
+    <view class="avatar-picker" bindtap="chooseAvatar">
+      <image wx:if="{{profileAvatarFileID}}" class="avatar-preview" src="{{profileAvatarFileID}}" mode="aspectFill" />
+      <view wx:else class="avatar-preview avatar-placeholder">＋</view>
+      <view class="avatar-tip">点击更换头像</view>
+    </view>
+
+    <view class="field">
+      <view class="label">姓名</view>
+      <input class="input" value="{{profileName}}" bindinput="onProfileNameInput" placeholder="请输入姓名" />
+    </view>
+
+    <view class="form-btns">
+      <button class="btn-cancel" bindtap="closeProfile">取消</button>
+      <button class="btn-primary" loading="{{savingProfile}}" disabled="{{savingProfile}}" bindtap="saveProfile">保存</button>
+    </view>
+  </view>
 </view>

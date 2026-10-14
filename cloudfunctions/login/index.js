@@ -38,6 +38,7 @@ exports.main = async (event, context) => {
           data: {
             _openid: OPENID,
             name,
+            avatarFileID: event.avatarFileID || '',
             isAdmin,
             createTime: db.serverDate()
           }
@@ -50,24 +51,33 @@ exports.main = async (event, context) => {
             _id: addRes._id,
             _openid: OPENID,
             name,
+            avatarFileID: event.avatarFileID || '',
             isAdmin
           }
         }
       }
 
-      case 'updateName': {
-        const name = (event.name || '').trim()
-        if (!name) {
-          return { code: 1, message: '请填写姓名' }
-        }
+      case 'updateProfile': {
         const exist = await users.where({ _openid: OPENID }).get()
         if (exist.data.length === 0) {
           return { code: 1, message: '用户不存在' }
         }
-        await users.doc(exist.data[0]._id).update({
-          data: { name }
-        })
-        return { code: 0, userInfo: { ...exist.data[0], name } }
+
+        const updateData = {}
+        if (event.name !== undefined) {
+          const name = (event.name || '').trim()
+          if (!name) return { code: 1, message: '请填写姓名' }
+          updateData.name = name
+        }
+        if (event.avatarFileID !== undefined) {
+          updateData.avatarFileID = event.avatarFileID
+        }
+        if (Object.keys(updateData).length === 0) {
+          return { code: 1, message: '没有要更新的内容' }
+        }
+
+        await users.doc(exist.data[0]._id).update({ data: updateData })
+        return { code: 0, userInfo: { ...exist.data[0], ...updateData } }
       }
 
       default:

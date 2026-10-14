@@ -16,6 +16,10 @@
       {{item.status === 'available' ? '在器材室' : '已借出'}}
     </view>
 
+    <view class="info-row" wx:if="{{item.category}}">
+      <view class="info-label">分类</view>
+      <view class="info-value">{{item.category}}</view>
+    </view>
     <view class="info-row" wx:if="{{item.code}}">
       <view class="info-label">编号</view>
       <view class="info-value">{{item.code}}</view>
@@ -32,6 +36,7 @@
     <view wx:if="{{item.status === 'borrowed'}}" class="borrow-info">
       <view class="borrow-title">当前借用信息</view>
       <view class="borrow-line">借用人：{{item.currentBorrower}}</view>
+      <view class="borrow-line" wx:if="{{item.currentReason}}">申请原因：{{item.currentReason}}</view>
       <view class="borrow-line">借用时间：{{item.borrowTimeText}}</view>
     </view>
   </view>

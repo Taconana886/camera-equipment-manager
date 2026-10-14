@@ -1,0 +1,63 @@
+.list-head {
+  padding: 24rpx 4rpx;
+  color: #999;
+  font-size: 26rpx;
+}
+
+.empty {
+  text-align: center;
+  padding: 120rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.record-card {
+  padding: 24rpx;
+}
+
+.record-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.record-name {
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.record-status {
+  font-size: 22rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 6rpx;
+}
+
+.record-status.borrowed {
+  background: #fdecec;
+  color: #e05353;
+}
+
+.record-status.returned {
+  background: #e8f7ee;
+  color: #2e9e5b;
+}
+
+.record-line {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.8;
+}
+
+.record-img {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  margin-top: 12rpx;
+  background: #f0f0f0;
+}
