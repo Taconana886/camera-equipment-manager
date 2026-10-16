@@ -4,20 +4,27 @@ const db = cloud.database()
 const equipmentCol = db.collection('equipment')
 const users = db.collection('users')
 
-// 判断是否是管理员
-async function isAdmin(openid) {
-  const res = await users.where({ _openid: openid }).get()
-  return res.data.length > 0 && res.data[0].isAdmin === true
+// 判断是否是管理员（token 优先，其次 openid）
+async function isAdmin(event) {
+  const { OPENID } = cloud.getWXContext()
+  if (event.token) {
+    const res = await users.where({ token: event.token }).get()
+    return res.data.length > 0 && res.data[0].isAdmin === true
+  }
+  if (OPENID) {
+    const res = await users.where({ _openid: OPENID }).get()
+    return res.data.length > 0 && res.data[0].isAdmin === true
+  }
+  return false
 }
 
 exports.main = async (event, context) => {
-  const { OPENID } = cloud.getWXContext()
   const action = event.action || 'list'
 
   try {
     switch (action) {
       case 'list': {
-        // 所有登录用户都可以查看器材列表
+        // 所有用户（含未登录）都可以查看器材列表
         const res = await equipmentCol.orderBy('createTime', 'desc').get()
         return { code: 0, list: res.data }
       }
@@ -30,12 +37,11 @@ exports.main = async (event, context) => {
       }
 
       case 'add': {
-        if (!(await isAdmin(OPENID))) return { code: 2, message: '无权限：仅管理员可添加器材' }
+        if (!(await isAdmin(event))) return { code: 2, message: '无权限：仅管理员可添加器材' }
 
         const name = (event.name || '').trim()
         if (!name) return { code: 1, message: '请填写器材名称' }
 
-        // 编号唯一性检查
         if (event.code) {
           const dup = await equipmentCol.where({ code: event.code }).get()
           if (dup.data.length > 0) return { code: 1, message: '该编号已存在' }
@@ -43,16 +49,17 @@ exports.main = async (event, context) => {
 
         const addRes = await equipmentCol.add({
           data: {
-            _openid: OPENID,
             name,
             category: event.category || '机身',
             code: (event.code || '').trim(),
             brand: (event.brand || '').trim(),
             imageFileID: event.imageFileID || '',
             remark: (event.remark || '').trim(),
-            status: 'available', // available 在库 / borrowed 已借出
+            status: 'available',
             currentBorrower: '',
             currentBorrowerOpenid: '',
+            currentBorrowerToken: '',
+            currentReason: '',
             borrowTime: null,
             createTime: db.serverDate()
           }
@@ -61,7 +68,7 @@ exports.main = async (event, context) => {
       }
 
       case 'update': {
-        if (!(await isAdmin(OPENID))) return { code: 2, message: '无权限：仅管理员可编辑器材' }
+        if (!(await isAdmin(event))) return { code: 2, message: '无权限：仅管理员可编辑器材' }
 
         const { id } = event
         if (!id) return { code: 1, message: '缺少器材 ID' }
@@ -74,7 +81,6 @@ exports.main = async (event, context) => {
         if (event.imageFileID !== undefined) updateData.imageFileID = event.imageFileID
         if (event.remark !== undefined) updateData.remark = (event.remark || '').trim()
 
-        // 编号唯一性检查
         if (updateData.code) {
           const dup = await equipmentCol.where({ code: updateData.code }).get()
           if (dup.data.length > 0 && dup.data[0]._id !== id) {
@@ -87,7 +93,7 @@ exports.main = async (event, context) => {
       }
 
       case 'delete': {
-        if (!(await isAdmin(OPENID))) return { code: 2, message: '无权限：仅管理员可删除器材' }
+        if (!(await isAdmin(event))) return { code: 2, message: '无权限：仅管理员可删除器材' }
 
         const { id } = event
         if (!id) return { code: 1, message: '缺少器材 ID' }

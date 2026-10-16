@@ -70,6 +70,11 @@ Page({
     if (url) wx.previewImage({ urls: [url] })
   },
 
+  previewAvatar(e) {
+    const url = e.currentTarget.dataset.url
+    if (url) wx.previewImage({ urls: [url] })
+  },
+
   async loadEquipment() {
     try {
       const res = await wx.cloud.callFunction({ name: 'equipment', data: { action: 'list' } })

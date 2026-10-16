@@ -40,9 +40,20 @@
   <view wx:if="{{userList.length === 0}}" class="empty">暂无用户</view>
 
   <view wx:for="{{userList}}" wx:key="_id" class="card user-card">
-    <view class="user-card-main">
-      <view class="user-name">{{item.name}}</view>
-      <view class="user-role">{{item.isAdmin ? '管理员' : '普通成员'}}</view>
+    <view class="user-card-left">
+      <image
+        wx:if="{{item.avatarFileID}}"
+        class="user-avatar"
+        src="{{item.avatarFileID}}"
+        mode="aspectFill"
+        data-url="{{item.avatarFileID}}"
+        bindtap="previewAvatar"
+      />
+      <view wx:else class="user-avatar user-avatar-text">{{item.name ? item.name[0] : '?'}}</view>
+      <view class="user-card-main">
+        <view class="user-name">{{item.name}}</view>
+        <view class="user-role">{{item.isAdmin ? '管理员' : '普通成员'}}</view>
+      </view>
     </view>
     <view class="user-ops">
       <view class="user-op" data-item="{{item}}" bindtap="toggleAdmin">

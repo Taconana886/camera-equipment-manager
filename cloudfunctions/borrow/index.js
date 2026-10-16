@@ -5,26 +5,35 @@ const equipmentCol = db.collection('equipment')
 const recordsCol = db.collection('borrow_records')
 const users = db.collection('users')
 
-// 获取用户信息（含是否管理员）
-async function getUser(openid) {
-  const res = await users.where({ _openid: openid }).get()
-  return res.data.length > 0 ? res.data[0] : null
+// 获取用户（网页 token 优先，其次小程序 openid）
+async function getUser(event) {
+  const { OPENID } = cloud.getWXContext()
+  if (event.token) {
+    const res = await users.where({ token: event.token }).get()
+    return res.data.length > 0 ? res.data[0] : null
+  }
+  if (OPENID) {
+    const res = await users.where({ _openid: OPENID }).get()
+    return res.data.length > 0 ? res.data[0] : null
+  }
+  return null
 }
 
 exports.main = async (event, context) => {
   const { OPENID } = cloud.getWXContext()
   const action = event.action || 'records'
+  const token = event.token || ''
+  const isWeb = !!token // 网页版一定有 token，小程序没有
 
   try {
     switch (action) {
       case 'borrow': {
-        const user = await getUser(OPENID)
-        if (!user) return { code: 2, message: '请先登录并填写姓名' }
+        const user = await getUser(event)
+        if (!user) return { code: 2, message: '请先登录' }
 
         const { id } = event
         if (!id) return { code: 1, message: '缺少器材 ID' }
 
-        // 查询器材状态
         const eqRes = await equipmentCol.doc(id).get().catch(() => null)
         if (!eqRes || !eqRes.data) return { code: 1, message: '器材不存在' }
         const eq = eqRes.data
@@ -34,29 +43,29 @@ exports.main = async (event, context) => {
 
         const now = db.serverDate()
         const reason = (event.reason || '').trim()
-        // 更新器材状态为已借出
         await equipmentCol.doc(id).update({
           data: {
             status: 'borrowed',
             currentBorrower: user.name,
-            currentBorrowerOpenid: OPENID,
+            currentBorrowerOpenid: isWeb ? '' : OPENID,
+            currentBorrowerToken: isWeb ? token : '',
             borrowTime: now,
             currentReason: reason
           }
         })
 
-        // 写入借用记录
         await recordsCol.add({
           data: {
-            _openid: OPENID,
             equipmentId: id,
             equipmentName: eq.name,
             equipmentCode: eq.code || '',
             borrowerName: user.name,
-            borrowerOpenid: OPENID,
+            borrowerOpenid: isWeb ? '' : OPENID,
+            borrowerToken: isWeb ? token : '',
             borrowTime: now,
             reason,
             returnTime: null,
+            returnImageFileID: '',
             status: 'borrowed'
           }
         })
@@ -65,8 +74,8 @@ exports.main = async (event, context) => {
       }
 
       case 'return': {
-        const user = await getUser(OPENID)
-        if (!user) return { code: 2, message: '请先登录并填写姓名' }
+        const user = await getUser(event)
+        if (!user) return { code: 2, message: '请先登录' }
 
         const { id } = event
         if (!id) return { code: 1, message: '缺少器材 ID' }
@@ -79,8 +88,10 @@ exports.main = async (event, context) => {
           return { code: 1, message: '该器材已在器材室，无需归还' }
         }
 
-        // 只有借用人本人或管理员可以归还
-        const isBorrower = eq.currentBorrowerOpenid === OPENID
+        // 借用人本人（网页 token 或小程序 openid）或管理员
+        const isBorrower = isWeb
+          ? eq.currentBorrowerToken === token
+          : eq.currentBorrowerOpenid === OPENID
         const isAdminUser = user.isAdmin === true
         if (!isBorrower && !isAdminUser) {
           return { code: 2, message: '只能由借用人本人或管理员归还' }
@@ -92,12 +103,12 @@ exports.main = async (event, context) => {
             status: 'available',
             currentBorrower: '',
             currentBorrowerOpenid: '',
+            currentBorrowerToken: '',
             borrowTime: null,
             currentReason: ''
           }
         })
 
-        // 更新借用记录
         const recRes = await recordsCol.where({
           equipmentId: id,
           status: 'borrowed'
@@ -117,12 +128,14 @@ exports.main = async (event, context) => {
       }
 
       case 'records': {
-        const user = await getUser(OPENID)
+        const user = await getUser(event)
         if (!user) return { code: 2, message: '请先登录' }
 
         let res
         if (user.isAdmin === true) {
           res = await recordsCol.orderBy('borrowTime', 'desc').limit(100).get()
+        } else if (isWeb) {
+          res = await recordsCol.where({ borrowerToken: token }).orderBy('borrowTime', 'desc').limit(100).get()
         } else {
           res = await recordsCol.where({ borrowerOpenid: OPENID }).orderBy('borrowTime', 'desc').limit(100).get()
         }

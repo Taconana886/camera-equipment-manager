@@ -1,0 +1,558 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f5f5f5;
+  color: #333;
+  font-size: 15px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.view {
+  min-height: 100vh;
+}
+
+/* 通用 */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #2b2b2b;
+  color: #fff;
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+}
+
+.btn-return {
+  background: #fff;
+  color: #e05353;
+  border: 1px solid #e05353;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+  background: #fff;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 登录 */
+#view-login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 30px;
+}
+
+.login-logo {
+  font-size: 72px;
+  margin-bottom: 16px;
+}
+
+.login-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2b2b2b;
+  margin-bottom: 8px;
+}
+
+.login-sub {
+  color: #999;
+  margin-bottom: 40px;
+}
+
+.login-form {
+  width: 100%;
+}
+
+.login-switch {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #666;
+}
+
+.login-switch a {
+  color: #2b2b2b;
+  font-weight: bold;
+}
+
+.login-tip {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #bbb;
+}
+
+/* 头部 */
+.header {
+  background: #2b2b2b;
+  padding: 20px 16px;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff;
+  object-fit: cover;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  color: #fff;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.user-role {
+  color: #bbb;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.header-btn {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  padding: 7px 14px;
+  font-size: 13px;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+/* 状态 tab */
+.tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 14px 0;
+  font-size: 15px;
+  color: #666;
+  cursor: pointer;
+  position: relative;
+}
+
+.tab.active {
+  color: #2b2b2b;
+  font-weight: bold;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 3px;
+  border-radius: 2px;
+  background: #2b2b2b;
+}
+
+/* 分类条 */
+.cat-bar {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  background: #fff;
+  padding: 10px 16px;
+  border-bottom: 1px solid #eee;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cat-item {
+  display: inline-block;
+  padding: 7px 18px;
+  margin-right: 10px;
+  font-size: 14px;
+  color: #666;
+  background: #f5f5f5;
+  border-radius: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cat-item.active {
+  background: #2b2b2b;
+  color: #fff;
+}
+
+.container {
+  padding: 14px;
+}
+
+/* 器材卡片 */
+.equip-card {
+  display: flex;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.equip-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  background: #f0f0f0;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.equip-img-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #ccc;
+}
+
+.equip-body {
+  flex: 1;
+  margin-left: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.equip-name-row {
+  display: flex;
+  align-items: center;
+}
+
+.equip-name {
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.cat-tag {
+  font-size: 12px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.equip-meta {
+  font-size: 13px;
+  color: #999;
+}
+
+.status-tag {
+  display: inline-block;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+
+.status-tag.available {
+  background: #e8f7ee;
+  color: #2e9e5b;
+}
+
+.status-tag.borrowed {
+  background: #fdecec;
+  color: #e05353;
+}
+
+.borrower {
+  margin-left: 10px;
+  font-size: 12px;
+  color: #2e6bd6;
+}
+
+.empty {
+  text-align: center;
+  padding: 80px 0;
+  color: #999;
+}
+
+/* 详情 */
+.detail {
+  padding: 14px;
+}
+
+.back-bar {
+  padding: 10px 0;
+}
+
+.back-bar a {
+  color: #2b2b2b;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.detail-img {
+  width: 100%;
+  height: 240px;
+  border-radius: 12px;
+  background: #f0f0f0;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.detail-name {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.info-list {
+  margin-top: 12px;
+}
+
+.info-row {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 14px;
+}
+
+.info-label {
+  width: 90px;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.info-value {
+  flex: 1;
+  word-break: break-all;
+}
+
+.borrow-info {
+  margin-top: 14px;
+  padding: 12px;
+  background: #fdf6f6;
+  border-radius: 8px;
+}
+
+.borrow-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #e05353;
+  margin-bottom: 8px;
+}
+
+.borrow-line {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.8;
+}
+
+.actions {
+  padding: 12px 0;
+}
+
+.actions .btn {
+  margin-bottom: 10px;
+}
+
+/* 管理 */
+.admin-card {
+  display: flex;
+  align-items: center;
+}
+
+.admin-card-main {
+  flex: 1;
+}
+
+.admin-card-name {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.admin-card-meta {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.op {
+  font-size: 13px;
+  padding: 6px 16px;
+  border-radius: 16px;
+  margin: 4px 0;
+  cursor: pointer;
+  border: 1px solid #999;
+  color: #2b2b2b;
+  text-align: center;
+  background: #fff;
+}
+
+.op-delete {
+  color: #e05353;
+  border-color: #e05353;
+}
+
+.list-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 2px;
+  color: #999;
+  font-size: 13px;
+}
+
+.add-btn {
+  background: #2b2b2b;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  object-fit: cover;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.user-avatar-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #2b2b2b;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.record-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  margin-top: 8px;
+  object-fit: cover;
+}
+
+/* 弹层 */
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+}
+
+.panel {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 20px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.panel-title {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-field {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.form-btns {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.form-btns .btn {
+  flex: 1;
+}
+
+.btn-cancel {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.img-preview {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+textarea.input {
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>记者团器材管理</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://static.cloudbase.net/cloudbase-js-sdk/1.7.0/cloudbase.full.js"></script>
+</head>
+<body>
+  <div id="app">
+
+    <!-- 登录视图 -->
+    <div id="view-login" class="view">
+      <div class="login-logo">📷</div>
+      <div class="login-title">记者团器材管理</div>
+      <div class="login-sub">请登录后使用</div>
+
+      <div class="login-form">
+        <input id="login-name" class="input" type="text" placeholder="姓名" />
+        <input id="login-password" class="input" type="password" placeholder="密码（至少4位）" />
+        <button id="btn-login" class="btn btn-primary">登 录</button>
+        <div class="login-switch">
+          <span>没有账号？</span>
+          <a id="link-register" href="javascript:;">立即注册</a>
+        </div>
+        <div class="login-tip">首个注册的用户将自动成为管理员</div>
+      </div>
+    </div>
+
+    <!-- 主视图 -->
+    <div id="view-main" class="view" style="display:none">
+      <div class="header">
+        <div class="user-row">
+          <img id="main-avatar" class="avatar" alt="" />
+          <div class="user-info">
+            <div id="main-name" class="user-name"></div>
+            <div id="main-role" class="user-role"></div>
+          </div>
+          <button id="btn-records" class="header-btn">📋 记录</button>
+          <button id="btn-admin" class="header-btn" style="display:none">⚙ 管理</button>
+          <button id="btn-edit-profile" class="header-btn">编辑</button>
+        </div>
+      </div>
+
+      <div class="tabs" id="status-tabs">
+        <div class="tab active" data-status="all">全部</div>
+        <div class="tab" data-status="available">在器材室</div>
+        <div class="tab" data-status="borrowed">已借出</div>
+      </div>
+
+      <div class="cat-bar" id="cat-bar"></div>
+
+      <div class="container">
+        <div id="equip-list" class="list"></div>
+      </div>
+    </div>
+
+    <!-- 详情视图 -->
+    <div id="view-detail" class="view" style="display:none">
+      <div class="detail">
+        <div class="back-bar"><a id="btn-back-list" href="javascript:;">← 返回列表</a></div>
+        <img id="detail-img" class="detail-img" alt="" />
+        <div class="card">
+          <div id="detail-name" class="detail-name"></div>
+          <div id="detail-status" class="status-tag"></div>
+          <div id="detail-info" class="info-list"></div>
+          <div id="detail-borrow-info" class="borrow-info" style="display:none"></div>
+        </div>
+        <div class="actions">
+          <button id="btn-borrow" class="btn btn-primary">借 用</button>
+          <button id="btn-return" class="btn btn-return" style="display:none">归 还</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 管理视图 -->
+    <div id="view-admin" class="view" style="display:none">
+      <div class="back-bar"><a id="btn-back-main" href="javascript:;">← 返回</a></div>
+      <div class="tabs" id="admin-tabs">
+        <div class="tab active" data-atab="equipment">器材管理</div>
+        <div class="tab" data-atab="users">用户管理</div>
+        <div class="tab" data-atab="records">借用记录</div>
+      </div>
+      <div class="container">
+        <div id="admin-content"></div>
+      </div>
+    </div>
+
+    <!-- 通用弹层 -->
+    <div id="modal" class="mask" style="display:none">
+      <div class="panel">
+        <div id="modal-title" class="panel-title"></div>
+        <div id="modal-body"></div>
+        <div id="modal-btns" class="form-btns"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
