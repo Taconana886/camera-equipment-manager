@@ -1,5 +1,5 @@
 const app = getApp()
-const { formatTime, CATEGORIES } = require('../../utils/util')
+const { formatTime, DEPARTMENTS, getCategories } = require('../../utils/util')
 
 Page({
   data: {
@@ -11,11 +11,15 @@ Page({
     loading: false,
     showForm: false,
     formMode: 'add', // add / edit
-    categories: CATEGORIES,
+    departments: DEPARTMENTS,
+    departmentNames: DEPARTMENTS.map(d => d.name),
+    departmentIndex: 0,
+    categories: getCategories('记者团'),
     categoryIndex: 0,
     form: {
       id: '',
       name: '',
+      department: '记者团',
       category: '机身',
       code: '',
       brand: '',
@@ -100,28 +104,49 @@ Page({
     this.setData({
       showForm: true,
       formMode: 'add',
+      departmentIndex: 0,
+      categories: getCategories('记者团'),
       categoryIndex: 0,
-      form: { id: '', name: '', category: '机身', code: '', brand: '', remark: '', imageFileID: '' }
+      form: { id: '', name: '', department: '记者团', category: '机身', code: '', brand: '', remark: '', imageFileID: '' }
     })
   },
 
   openEdit(e) {
     const item = e.currentTarget.dataset.item
-    const category = item.category || '机身'
-    const categoryIndex = Math.max(0, this.data.categories.indexOf(category))
+    const department = item.department || '记者团'
+    const category = item.category || getCategories(department)[0]
+    const categories = getCategories(department)
+    const departmentIndex = Math.max(0, this.data.departmentNames.indexOf(department))
+    const categoryIndex = Math.max(0, categories.indexOf(category))
     this.setData({
       showForm: true,
       formMode: 'edit',
+      departmentIndex,
+      categories,
       categoryIndex,
       form: {
         id: item._id,
         name: item.name,
+        department,
         category,
         code: item.code || '',
         brand: item.brand || '',
         remark: item.remark || '',
         imageFileID: item.imageFileID || ''
       }
+    })
+  },
+
+  onDepartmentChange(e) {
+    const index = Number(e.detail.value)
+    const department = this.data.departmentNames[index]
+    const categories = getCategories(department)
+    this.setData({
+      departmentIndex: index,
+      categories,
+      categoryIndex: 0,
+      'form.department': department,
+      'form.category': categories[0]
     })
   },
 
@@ -186,6 +211,7 @@ Page({
           data: {
             action: 'add',
             name: form.name,
+            department: form.department,
             category: form.category,
             code: form.code,
             brand: form.brand,
@@ -200,6 +226,7 @@ Page({
             action: 'update',
             id: form.id,
             name: form.name,
+            department: form.department,
             category: form.category,
             code: form.code,
             brand: form.brand,

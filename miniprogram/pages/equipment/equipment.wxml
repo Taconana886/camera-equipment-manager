@@ -16,6 +16,10 @@
       {{item.status === 'available' ? '在器材室' : '已借出'}}
     </view>
 
+    <view class="info-row" wx:if="{{item.department}}">
+      <view class="info-label">部门</view>
+      <view class="info-value">{{item.department}}</view>
+    </view>
     <view class="info-row" wx:if="{{item.category}}">
       <view class="info-label">分类</view>
       <view class="info-value">{{item.category}}</view>

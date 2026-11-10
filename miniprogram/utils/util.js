@@ -1,7 +1,16 @@
 // 通用工具函数
 
-// 器材分类
-const CATEGORIES = ['机身', '镜头', '内存卡', '电池', '闪光灯', '读卡器']
+// 部门及各部门器材分类
+const DEPARTMENTS = [
+  { name: '记者团', categories: ['机身', '镜头', '内存卡', '电池', '闪光灯', '读卡器'] },
+  { name: '电视台', categories: ['机身', '镜头', '稳定器', '内存卡', '灯具', '电池', '图传', '无人机', '麦克风', '脚架', '读卡器', '硬盘', '其他'] }
+]
+
+// 获取某部门的分类列表
+function getCategories(department) {
+  const d = DEPARTMENTS.find(x => x.name === department)
+  return d ? d.categories : DEPARTMENTS[0].categories
+}
 
 // 调用云函数封装
 function callCloud(name, data = {}) {
@@ -16,7 +25,8 @@ function formatTime(date) {
 }
 
 module.exports = {
-  CATEGORIES,
+  DEPARTMENTS,
+  getCategories,
   callCloud,
   formatTime
 }

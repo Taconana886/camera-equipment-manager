@@ -50,6 +50,7 @@ exports.main = async (event, context) => {
         const addRes = await equipmentCol.add({
           data: {
             name,
+            department: event.department || '记者团',
             category: event.category || '机身',
             code: (event.code || '').trim(),
             brand: (event.brand || '').trim(),
@@ -75,6 +76,7 @@ exports.main = async (event, context) => {
 
         const updateData = {}
         if (event.name !== undefined) updateData.name = (event.name || '').trim()
+        if (event.department !== undefined) updateData.department = event.department
         if (event.category !== undefined) updateData.category = event.category
         if (event.code !== undefined) updateData.code = (event.code || '').trim()
         if (event.brand !== undefined) updateData.brand = (event.brand || '').trim()

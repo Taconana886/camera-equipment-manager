@@ -25,6 +25,17 @@
   <view class="tab {{tab === 'borrowed' ? 'active' : ''}}" data-tab="borrowed" bindtap="switchTab">已借出 ({{borrowedCount}})</view>
 </view>
 
+<scroll-view class="cat-bar dept-bar" scroll-x enhanced show-scrollbar="{{false}}">
+  <view class="cat-item {{selectedDepartment === '全部' ? 'active' : ''}}" data-department="全部" bindtap="switchDepartment">全部</view>
+  <view
+    wx:for="{{departmentNames}}"
+    wx:key="*this"
+    class="cat-item {{selectedDepartment === item ? 'active' : ''}}"
+    data-department="{{item}}"
+    bindtap="switchDepartment"
+  >{{item}}</view>
+</scroll-view>
+
 <scroll-view class="cat-bar" scroll-x enhanced show-scrollbar="{{false}}">
   <view class="cat-item {{selectedCategory === '全部' ? 'active' : ''}}" data-category="全部" bindtap="switchCategory">全部</view>
   <view
@@ -61,6 +72,7 @@
       <view class="equip-body">
         <view class="equip-name-row">
           <view class="equip-name">{{item.name}}</view>
+          <view class="dept-tag">{{item.department || '记者团'}}</view>
           <view class="cat-tag">{{item.category || '机身'}}</view>
         </view>
         <view class="equip-meta">{{item.brand}}{{item.brand && item.code ? ' · ' : ''}}{{item.code}}</view>

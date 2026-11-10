@@ -17,8 +17,9 @@
     <view class="admin-card-main">
       <view class="admin-card-name">{{item.name}}</view>
       <view class="admin-card-meta">
-        <text wx:if="{{item.code}}">编号：{{item.code}}</text>
-        <text wx:if="{{item.brand}}">  {{item.brand}}</text>
+        <text>{{item.department || '记者团'}} · {{item.category || '机身'}}</text>
+        <text wx:if="{{item.code}}">　编号：{{item.code}}</text>
+        <text wx:if="{{item.brand}}">　{{item.brand}}</text>
       </view>
       <view class="status-tag {{item.status === 'available' ? 'available' : 'borrowed'}}">
         {{item.status === 'available' ? '在器材室' : '已借出'}}
@@ -102,6 +103,13 @@
     <view class="field">
       <view class="label">器材名称 <text class="req">*</text></view>
       <input class="input" value="{{form.name}}" data-field="name" bindinput="onInput" placeholder="如：佳能 5D Mark IV" />
+    </view>
+
+    <view class="field">
+      <view class="label">部门</view>
+      <picker mode="selector" range="{{departmentNames}}" value="{{departmentIndex}}" bindchange="onDepartmentChange">
+        <view class="picker">{{form.department}}</view>
+      </picker>
     </view>
 
     <view class="field">

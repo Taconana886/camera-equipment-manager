@@ -171,5 +171,13 @@ Page({
       name: 'borrow',
       data: { action, id: this.data.id, ...extra }
     }).then(res => res.result || {})
+  },
+
+  onShareAppMessage() {
+    const item = this.data.item
+    return {
+      title: item ? `器材：${item.name}` : '记者团器材管理',
+      path: `/pages/equipment/equipment?id=${this.data.id}`
+    }
   }
 })

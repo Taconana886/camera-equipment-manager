@@ -1,12 +1,15 @@
 const app = getApp()
-const { CATEGORIES } = require('../../utils/util')
+const { DEPARTMENTS, getCategories } = require('../../utils/util')
 
 Page({
   data: {
     userInfo: null,
     isAdmin: false,
     tab: 'all', // all / available / borrowed
-    categories: CATEGORIES,
+    departments: DEPARTMENTS,
+    departmentNames: DEPARTMENTS.map(d => d.name),
+    selectedDepartment: '全部',
+    categories: [],
     selectedCategory: '全部',
     list: [],
     filteredList: [],
@@ -79,6 +82,7 @@ Page({
         const availableCount = list.filter(i => i.status === 'available').length
         const borrowedCount = list.filter(i => i.status === 'borrowed').length
         this.setData({ list, total: list.length, availableCount, borrowedCount })
+        this.renderCategories()
         this.applyFilter()
       } else {
         wx.showToast({ title: result.message || '加载失败', icon: 'none' })
@@ -97,17 +101,33 @@ Page({
     this.applyFilter()
   },
 
+  switchDepartment(e) {
+    const selectedDepartment = e.currentTarget.dataset.department
+    this.setData({ selectedDepartment, selectedCategory: '全部' })
+    this.renderCategories()
+    this.applyFilter()
+  },
+
   switchCategory(e) {
     const selectedCategory = e.currentTarget.dataset.category
     this.setData({ selectedCategory })
     this.applyFilter()
   },
 
+  renderCategories() {
+    const { selectedDepartment } = this.data
+    const categories = selectedDepartment === '全部' ? [] : getCategories(selectedDepartment)
+    this.setData({ categories })
+  },
+
   applyFilter() {
-    const { tab, list, selectedCategory } = this.data
+    const { tab, list, selectedDepartment, selectedCategory } = this.data
     let filteredList = list
     if (tab === 'available') filteredList = filteredList.filter(i => i.status === 'available')
     if (tab === 'borrowed') filteredList = filteredList.filter(i => i.status === 'borrowed')
+    if (selectedDepartment !== '全部') {
+      filteredList = filteredList.filter(i => (i.department || '记者团') === selectedDepartment)
+    }
     if (selectedCategory !== '全部') {
       filteredList = filteredList.filter(i => (i.category || '机身') === selectedCategory)
     }
@@ -218,5 +238,12 @@ Page({
 
   onPullDownRefresh() {
     this.loadList().then(() => wx.stopPullDownRefresh())
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '记者团器材管理',
+      path: '/pages/index/index'
+    }
   }
 })

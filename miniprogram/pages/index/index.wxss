@@ -187,6 +187,15 @@
   border-radius: 6rpx;
 }
 
+.dept-tag {
+  font-size: 22rpx;
+  color: #2e6bd6;
+  background: #e8f0fb;
+  padding: 4rpx 14rpx;
+  border-radius: 6rpx;
+  margin-right: 10rpx;
+}
+
 .equip-meta {
   font-size: 26rpx;
   color: #999;
