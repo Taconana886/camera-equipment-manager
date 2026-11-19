@@ -15,3 +15,9 @@ npm-debug.log*
 # 临时文件
 *.tmp
 *.swp
+
+# AI 助手密钥（含 DeepSeek API Key，勿提交）
+cloudfunctions/ai/config.js
+
+# PPT 工程中间产物（成品见 参赛材料/幸运团长-参赛演示.pptx）
+参赛材料/projects/

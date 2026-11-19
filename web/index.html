@@ -38,6 +38,7 @@
             <div id="main-role" class="user-role"></div>
           </div>
           <button id="btn-records" class="header-btn">📋 记录</button>
+          <button id="btn-ai" class="header-btn">🤖 AI 助手</button>
           <button id="btn-admin" class="header-btn" style="display:none">⚙ 管理</button>
           <button id="btn-edit-profile" class="header-btn">编辑</button>
         </div>
@@ -84,6 +85,36 @@
       </div>
       <div class="container">
         <div id="admin-content"></div>
+      </div>
+    </div>
+
+    <!-- AI 助手视图 -->
+    <div id="view-ai" class="view" style="display:none">
+      <div class="ai-wrap">
+        <div class="back-bar"><a id="btn-ai-back" href="javascript:;">← 返回列表</a></div>
+        <div class="ai-header">
+          <div class="ai-avatar">🤖</div>
+          <div>
+            <div class="ai-name">幸运团长 · AI 器材助手</div>
+            <div class="ai-desc">查器材 · 推荐搭配 · 借用答疑</div>
+          </div>
+        </div>
+        <div id="ai-messages" class="ai-messages">
+          <div class="ai-welcome">
+            <div class="ai-welcome-icon">📷</div>
+            <div>你好，我是幸运团长。问我任何器材问题吧～</div>
+          </div>
+        </div>
+        <div id="ai-quick" class="ai-quick">
+          <div class="ai-quick-item">现在有哪些镜头可以借？</div>
+          <div class="ai-quick-item">帮我推荐一套拍晚会的机身+镜头组合</div>
+          <div class="ai-quick-item">怎么借用和归还器材？</div>
+          <div class="ai-quick-item">闪光灯现在谁借走了？</div>
+        </div>
+        <div class="ai-inputbar">
+          <input id="ai-input" class="ai-input" type="text" placeholder="问问器材，比如：有哪些镜头可以借？" />
+          <button id="btn-ai-send" class="btn btn-primary ai-send">发送</button>
+        </div>
       </div>
     </div>
 

@@ -46,5 +46,6 @@
   "packOptions": {
     "ignore": [],
     "include": []
-  }
+  },
+  "srcMiniprogramRoot": "miniprogram/"
 }

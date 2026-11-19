@@ -7,6 +7,7 @@
       <view class="user-role">{{isAdmin ? '管理员' : '普通成员'}} · 点击编辑资料</view>
     </view>
     <view class="header-btn" catchtap="goRecords">📋 记录</view>
+    <view class="header-btn" catchtap="goAssistant">🤖 AI 助手</view>
     <view wx:if="{{isAdmin}}" class="admin-btn" catchtap="goAdmin">⚙ 管理</view>
   </view>
   <view wx:else class="user-row" bindtap="goLogin">
@@ -15,6 +16,7 @@
       <view class="user-name">未登录</view>
       <view class="user-role">浏览器材无需登录，借用时需登录</view>
     </view>
+    <view class="header-btn" catchtap="goAssistant">🤖 AI 助手</view>
     <view class="header-btn login-btn">登 录</view>
   </view>
 </view>

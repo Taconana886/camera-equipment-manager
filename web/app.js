@@ -557,6 +557,65 @@ function toast(msg) {
   t._timer = setTimeout(() => (t.style.display = 'none'), 1800)
 }
 
+// ---------- AI 助手 ----------
+let aiHistory = []
+
+function showAI() {
+  show('view-ai')
+  const msgs = document.getElementById('ai-messages')
+  msgs.scrollTop = msgs.scrollHeight
+  document.getElementById('ai-input').focus()
+}
+
+function addAiBubble(role, text) {
+  const wrap = document.getElementById('ai-messages')
+  const row = document.createElement('div')
+  row.className = 'ai-row ai-' + role
+  const bubble = document.createElement('div')
+  bubble.className = 'ai-bubble'
+  bubble.textContent = text
+  row.appendChild(bubble)
+  wrap.appendChild(row)
+  wrap.scrollTop = wrap.scrollHeight
+  return bubble
+}
+
+async function aiSend() {
+  const input = document.getElementById('ai-input')
+  const question = input.value.trim()
+  if (!question) return
+
+  input.value = ''
+  addAiBubble('user', question)
+  document.getElementById('ai-quick').style.display = 'none'
+  document.getElementById('btn-ai-send').disabled = true
+
+  const bubble = addAiBubble('ai', '')
+  bubble.classList.add('ai-thinking')
+  bubble.textContent = '思考中…'
+
+  aiHistory.push({ role: 'user', content: question })
+  const history = aiHistory.slice(-6)
+
+  const r = await call('ai', { action: 'chat', question, history })
+  bubble.classList.remove('ai-thinking')
+
+  if (r.code === 0 && r.reply) {
+    // 逐字输出
+    let i = 0
+    const timer = setInterval(() => {
+      i += 2
+      bubble.textContent = r.reply.slice(0, i)
+      bubble.parentElement.parentElement.scrollTop = bubble.parentElement.parentElement.scrollHeight
+      if (i >= r.reply.length) clearInterval(timer)
+    }, 20)
+    aiHistory.push({ role: 'assistant', content: r.reply })
+  } else {
+    bubble.textContent = r.message || 'AI 暂时没有回答，请稍后再试'
+  }
+  document.getElementById('btn-ai-send').disabled = false
+}
+
 // ---------- 事件绑定 ----------
 function bindEvents() {
   document.getElementById('btn-login').addEventListener('click', doLogin)
@@ -588,6 +647,18 @@ function bindEvents() {
   })
 
   document.getElementById('btn-records').addEventListener('click', openRecords)
+  document.getElementById('btn-ai').addEventListener('click', showAI)
+  document.getElementById('btn-ai-back').addEventListener('click', showMain)
+  document.getElementById('btn-ai-send').addEventListener('click', aiSend)
+  document.getElementById('ai-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') aiSend()
+  })
+  document.querySelectorAll('.ai-quick-item').forEach(el => {
+    el.addEventListener('click', () => {
+      document.getElementById('ai-input').value = el.textContent
+      aiSend()
+    })
+  })
   document.getElementById('btn-admin').addEventListener('click', showAdmin)
   document.getElementById('btn-edit-profile').addEventListener('click', openProfile)
   document.getElementById('btn-back-list').addEventListener('click', showMain)

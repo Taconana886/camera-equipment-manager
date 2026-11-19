@@ -147,6 +147,10 @@ Page({
     wx.navigateTo({ url: '/pages/records/records' })
   },
 
+  goAssistant() {
+    wx.navigateTo({ url: '/pages/assistant/assistant' })
+  },
+
   goLogin() {
     wx.navigateTo({ url: '/pages/login/login' })
   },
